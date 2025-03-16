@@ -1,6 +1,4 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Croissant+One&family=Niconne&family=Rancho&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&family=Croissant+One&family=Niconne&family=Rancho&display=swap');
 
 *{
   margin: 0;
@@ -9,7 +7,7 @@
 }
 
 html, body{
-  font-family: "Montserrat", sans-serif;
+  font-family: "Big Shoulders Inline","Montserrat", sans-serif;
 }
 .croissant-one-regular {
   font-family: "Croissant One", serif;
@@ -26,6 +24,13 @@ html, body{
   font-weight: 400;
   font-style: normal;
 }
+.big-shoulders-inline-ash {
+  font-family: "Big Shoulders Inline", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
 
 
 
