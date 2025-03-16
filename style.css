@@ -7,7 +7,7 @@
 }
 
 html, body{
-  font-family: "Big Shoulders Inline","Montserrat", sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 .croissant-one-regular {
   font-family: "Croissant One", serif;
@@ -44,6 +44,9 @@ html, body{
 
 .font3{
   font-family: "Rancho","Montserrat", sans-serif;
+}
+.font4{
+  font-family: "Big Shoulders Inline","Montserrat", sans-serif;
 }
 
 /* body{
@@ -378,11 +381,10 @@ svg{
 }
 
 .section-heading{
-  font-size: 18px;
+  font-size: 38px;
   font-weight: 700;
-  line-height: 1.8;
-  margin-top: 64px;
   color: var(--color-text);
+  margin-bottom: 25px;
 }
 
 .section-text{
@@ -872,7 +874,7 @@ img {
   width: 120px; /* Increased width */
   height: 120px; /* Increased height */
   background: lightgrey;
-  transition: 0.4s ease-in-out, 0.2s background-color ease-in-out,
+  transition: 0.5s ease-in-out, 0.2s background-color ease-in-out,
     0.2s background-image ease-in-out;
   background: rgba(255, 255, 255, 0.596);
   backdrop-filter: blur(5px);
@@ -890,7 +892,7 @@ img {
 .text {
   position: absolute;
   font-size: 1.5em; /* Increased text size */
-  transition: 0.2s ease-in-out ; /* Delayed text disappearance */
+  transition: 0.1s ease-in-out ; /* Delayed text disappearance */
   color: black;
   text-align: center;
   font-weight: bold;
