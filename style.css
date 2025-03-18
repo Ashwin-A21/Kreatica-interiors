@@ -1056,3 +1056,73 @@ img {
   fill: white;
 }
 
+
+*************profile card**********
+
+.prof-body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.prof-container {
+    display: flex;
+    gap: 20px;
+}
+
+.prof-card {
+    width: 200px;
+    height: 300px;
+    perspective: 1000px;
+    
+}
+
+.prof-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.prof-card:hover .prof-card-inner {
+    transform: rotateY(180deg);
+}
+
+.prof-card-front, .prof-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.prof-card-front {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f892922d;
+}
+
+.prof-card-front img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire card */
+}
+
+.prof-card-back {
+    background-color: lightpink;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transform: rotateY(180deg);
+    padding: 20px;
+    text-align: center;
+}
