@@ -14,5 +14,10 @@
     "lil-gui": "^0.16.1",
     "three": "^0.141.0",
     "vite": "^6.2.1"
+  },
+  "dependencies": {
+    "firebase": "^11.4.0",
+    "firebase-tools": "^13.34.0",
+    "razorpay": "^2.9.6"
   }
 }
