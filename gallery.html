@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interior Design Portfolio</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline:opsz,wght@10..72,100..900&family=Croissant+One&family=Niconne&family=Rancho&display=swap');
+        .rancho-regular {
+  font-family: "Rancho", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+      
+      
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+body{
+   background-color:  #dffcfd;
+}
+      .navbar {
+    position: absolute;
+    top: -60px;
+    left: 25%;
+    width: 50%; 
+    z-index:0 ;
+    
+    border-radius: 0 0 10px 10px;
+    animation: slideDown 0.6s ease forwards;
+    transition: all ease-in-out 0.5s;
+}
+
+@keyframes slideDown {
+    from {
+        top: -60px;
+    }
+    to {
+        top: 0;
+    }
+}
+
+      .navbar ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .navbar h1  {
+        color: #3255f3;
+        padding: 15px;
+        display: block;
+      }
+      .navbar:hover{
+        scale: 1.1;
+        box-shadow: 0 2px 5px rgba(100, 100, 240, 0.801);
+
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      header {
+        text-align: center;
+        padding: 40px 0;
+      
+      }
+
+      h1 {
+        font-size: 36px;
+        margin-bottom: 15px;
+        color: #122f4d;
+      }
+
+      .description {
+        font-size: 28px;
+        color: #595f5f;
+        max-width: 900px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-family:"Rancho" ;
+      }
+
+      .category-tabs {
+        display: flex;
+        justify-content: center;
+        margin: 30px 0;
+        
+      }
+
+      .tab {
+        padding: 12px 30px;
+        background-color: #c1e1f7;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 500;
+        border: none;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        border-radius: 20px;
+      }
+
+      .tab.active {
+        background-color: #587ca0;
+        color: white;
+      }
+      .tab:hover{
+        scale: 1.1;
+        box-shadow: 0 2px 5px rgba(100, 100, 240, 0.801);
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-gap: 20px;
+      }
+
+      .gallery-item {
+        overflow: hidden;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+        height: 300px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-5px);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gallery-item:hover img {
+        transform: scale(1.05);
+      }
+
+      .item-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 15px;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+
+      .gallery-item:hover .item-overlay {
+        transform: translateY(0);
+      }
+
+      .item-title {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+
+      .item-desc {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .gallery-section {
+        display: none;
+      }
+
+      .gallery-section.active {
+        display: block;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .gallery {
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        }
+
+        .container {
+          padding: 10px;
+        }
+
+        header {
+          padding: 20px 0;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        .description {
+          font-size: 16px;
+          padding: 0 15px;
+        }
+
+        .tab {
+          padding: 10px 20px;
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .gallery {
+          grid-template-columns: 1fr;
+        }
+
+        .gallery-item {
+          height: 250px;
+        }
+
+        .category-tabs {
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .tab {
+          margin: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav class="navbar" id="navbar">
+        <ul>
+          <h1>Kreatica Design Gallery</h1>
+        </ul>
+      </nav>
+      <header>
+        <br><br><br>
+        <p class="description">
+          Transforming spaces with innovative design solutions, blending
+          aesthetics with functionality to create exceptional environments.
+        </p>
+      </header>
+
+      <div class="category-tabs">
+        <button class="tab active" data-category="interior">Interior</button>
+        <button class="tab" data-category="exterior">Exterior</button>
+      </div>
+
+      <div id="interior" class="gallery-section active">
+        <div class="gallery">
+          <div class="gallery-item">
+            <img src="img/IMG-20250214-WA0008.jpg" alt="Modern Living Room" />
+            <div class="item-overlay">
+              <h3 class="item-title">Modern Living Room</h3>
+              <p class="item-desc">
+                Contemporary design with neutral palette and clean lines
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/IMG-20250214-WA0007.jpg" alt="Minimalist Kitchen" />
+            <div class="item-overlay">
+              <h3 class="item-title">Minimalist Kitchen</h3>
+              <p class="item-desc">
+                White cabinetry with marble countertops and brass fixtures
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (7).jpg" alt="Luxury Bathroom" />
+            <div class="item-overlay">
+              <h3 class="item-title">Luxury Bathroom</h3>
+              <p class="item-desc">
+                Spa-inspired design with freestanding tub and natural elements
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (6).jpg" alt="Office Space" />
+            <div class="item-overlay">
+              <h3 class="item-title">Office Space</h3>
+              <p class="item-desc">
+                Functional workspace with ergonomic furniture and ample storage
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/mb.jpg" alt="Master Bedroom" />
+            <div class="item-overlay">
+              <h3 class="item-title">Master Bedroom</h3>
+              <p class="item-desc">
+                Serene retreat with layered textures and soft lighting
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (3).jpg" alt="Dining Area" />
+            <div class="item-overlay">
+              <h3 class="item-title">Dining Area</h3>
+              <p class="item-desc">
+                Statement lighting and custom dining table for entertaining
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="exterior" class="gallery-section">
+        <div class="gallery">
+          <div class="gallery-item">
+            <img src="img/gallery (2).jpg" alt="Modern Facade" />
+            <div class="item-overlay">
+              <h3 class="item-title">Modern Facade</h3>
+              <p class="item-desc">
+                Clean lines and mixed materials create striking curb appeal
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (1).jpg" alt="Poolside Retreat" />
+            <div class="item-overlay">
+              <h3 class="item-title">Poolside Retreat</h3>
+              <p class="item-desc">
+                Luxury outdoor entertaining space with integrated lighting
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (9).jpg" alt="Garden Terrace" />
+            <div class="item-overlay">
+              <h3 class="item-title">Garden Terrace</h3>
+              <p class="item-desc">
+                Tiered landscaping with native plants and outdoor seating
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (10).jpg" alt="Entry Courtyard" />
+            <div class="item-overlay">
+              <h3 class="item-title">Entry Courtyard</h3>
+              <p class="item-desc">
+                Welcoming approach with water feature and architectural lighting
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (12).jpg" alt="Rooftop Garden" />
+            <div class="item-overlay">
+              <h3 class="item-title">Rooftop Garden</h3>
+              <p class="item-desc">
+                Urban oasis with container gardens and comfortable lounge area
+              </p>
+            </div>
+          </div>
+          <div class="gallery-item">
+            <img src="img/gallery (11).jpg" alt="Exterior Lighting" />
+            <div class="item-overlay">
+              <h3 class="item-title">Exterior Lighting</h3>
+              <p class="item-desc">
+                Strategic lighting design highlighting architectural features
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript to handle category switching
+      document.addEventListener("DOMContentLoaded", function () {
+        const tabs = document.querySelectorAll(".tab");
+        const sections = document.querySelectorAll(".gallery-section");
+
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", function () {
+            const category = this.getAttribute("data-category");
+
+            // Remove active class from all tabs
+            tabs.forEach((t) => t.classList.remove("active"));
+            // Add active class to clicked tab
+            this.classList.add("active");
+
+            // Hide all sections
+            sections.forEach((section) => section.classList.remove("active"));
+            // Show the selected section
+            document.getElementById(category).classList.add("active");
+          });
+        });
+
+        // Optional: Add smooth transitions when switching between galleries
+        const galleryItems = document.querySelectorAll(".gallery-item");
+        galleryItems.forEach((item, index) => {
+          item.style.animationDelay = `${index * 0.1}s`;
+        });
+      });
+      //navbar on top
+    </script>
+  </body>
+</html>

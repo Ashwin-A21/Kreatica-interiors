@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interior Design Chat</title>
+    <style>
+      :root {
+        --primary-color: #c9b384;
+        --primary-dark: #b09b6d;
+        --secondary-color: #71669b;
+        --tertiary-color: #78cebf;
+        --light-color: #f8f5f0;
+        --dark-color: #333333;
+        --border-radius: 14px;
+        --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f0f0f0;
+        background-image: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+        padding: 20px;
+      }
+
+      .chat-container {
+        width: 400px;
+        height: 600px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        /* overflow: hidden; */
+        transition: all 0.3s ease;
+        max-width: 95vw;
+        overflow-y: auto;
+      }
+
+      @media (min-width: 768px) {
+        .chat-container {
+          width: 500px;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .chat-container {
+          width: 800px;
+        }
+      }
+
+      .chat-header {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        background: linear-gradient(
+          to right,
+          var(--secondary-color),
+          var(--tertiary-color)
+        );
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+      }
+
+      .chat-header img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        border: 2px solid white;
+      }
+
+      .header-text {
+        flex-grow: 1;
+      }
+
+      .username {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 2px;
+      }
+
+      .status {
+        font-size: 12px;
+        opacity: 0.8;
+      }
+
+      .chat-body {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        background-color: var(--light-color);
+        position: relative;
+      }
+
+      .chat-log {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        scroll-behavior: smooth;
+      }
+
+      .chat-log::-webkit-scrollbar {
+        width: 6px;
+        
+      }
+
+      .chat-log::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      .chat-log::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 10px;
+      }
+     
+      .message {
+        margin-bottom: 10px;
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 80%;
+        word-wrap: break-word;
+        position: relative;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message.sent {
+        align-self: flex-end;
+        background-color: var(--secondary-color);
+        color: white;
+        border-bottom-right-radius: 5px;
+      }
+
+      .message.received {
+        align-self: flex-start;
+        background-color: white;
+        color: var(--dark-color);
+        border-bottom-left-radius: 5px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .message-time {
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 5px;
+        text-align: right;
+      }
+
+      .suggestions-container {
+        padding: 10px 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        background-color: white;
+      }
+
+      .suggestion-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .suggestion-chip {
+        background-color: var(--secondary-color);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+        border: none;
+        animation: chipAppear 0.3s ease;
+      }
+
+      @keyframes chipAppear {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .suggestion-chip:hover {
+        background-color: var(--primary-color);
+        transform: translateY(-2px);
+      }
+
+      .suggestion-chip:active {
+        transform: translateY(0);
+      }
+
+      .chat-input {
+        display: flex;
+        padding: 10px 15px;
+        background-color: white;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        position: sticky; /* Make it stick to the bottom */
+        bottom: 0; /* Align to the bottom */
+        z-index: 1;
+      }
+
+      .message-input-container {
+        display: flex;
+        flex-grow: 1;
+        position: relative;
+        margin-right: 10px;
+      }
+
+      #message-input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 24px;
+        outline: none;
+        font-size: 15px;
+        transition: all 0.2s ease;
+      }
+
+      #message-input:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 2px rgba(113, 102, 155, 0.2);
+      }
+
+      .send-button {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      }
+
+      .send-button:hover {
+        background-color: var(--primary-dark);
+        transform: scale(1.05);
+      }
+
+      .send-button:active {
+        transform: scale(0.95);
+      }
+
+      .send-button svg {
+        width: 20px;
+        height: 20px;
+        fill: white;
+      }
+
+      .typing-indicator {
+        display: none;
+        align-items: center;
+        margin: 10px 0 10px 15px;
+        font-size: 14px;
+        color: var(--dark-color);
+        opacity: 0.7;
+      }
+
+      .typing-dots {
+        display: flex;
+        margin-left: 10px;
+      }
+
+      .typing-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--secondary-color);
+        border-radius: 50%;
+        margin-right: 4px;
+        animation: typingDot 1.4s infinite ease-in-out;
+      }
+
+      .typing-dot:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+        margin-right: 0;
+      }
+
+      @keyframes typingDot {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-5px);
+        }
+      }
+
+      /* Responsive styles */
+      @media (max-width: 480px) {
+        .chat-header {
+          padding: 10px 15px;
+        }
+
+        .chat-header img {
+          width: 32px;
+          height: 32px;
+        }
+
+        .username {
+          font-size: 16px;
+        }
+
+        .message {
+          padding: 8px 12px;
+          max-width: 85%;
+        }
+
+        .suggestion-chip {
+          padding: 6px 12px;
+          font-size: 12px;
+        }
+
+        #message-input {
+          padding: 10px 12px;
+          font-size: 14px;
+        }
+
+        .send-button {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <div class="chat-header">
+        <img src="logo.png" alt="Profile Picture" />
+        <div class="header-text">
+          <div class="username">Interior Design Bot</div>
+          <div class="status">Online • Ready to help with design ideas</div>
+        </div>
+      </div>
+
+      <div class="chat-body">
+        <div class="chat-log" id="chat-log">
+          <!-- Messages will appear here -->
+          <div class="message received">
+            <div class="message-content">
+              Hi there! I'm your Interior Design Assistant. How can I help you
+              today?
+            </div>
+            <div class="message-time">Just now</div>
+          </div>
+        </div>
+
+        <div class="typing-indicator" id="typing-indicator">
+          <span>Interior Design Bot is typing</span>
+          <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+
+        <div class="suggestions-container">
+          <div class="suggestion-chips" id="suggestion-chips">
+            <button class="suggestion-chip">Modern living room ideas</button>
+            <button class="suggestion-chip">Small space design</button>
+            <button class="suggestion-chip">Color palette help</button>
+            <button class="suggestion-chip">Kitchen renovation</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <div class="message-input-container">
+          <input
+            type="text"
+            id="message-input"
+            placeholder="Type your message..."
+          />
+        </div>
+        <button class="send-button" id="send-button">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <script>
+      // Chat responses database
+      const responses = {
+        hello: "Hi! How can I help you today?",
+        hi: "Hello! Welcome to our interior design services.",
+        "how are you":
+          "I'm doing great, thanks for asking! How can I help with your interior design needs?",
+        "what is your name":
+          "My name is Interior Design Bot! I'm here to assist with all your design questions.",
+        "i need help with living room design":
+          "Sure! What style are you thinking of for your living room? Modern, minimalist, traditional, or something else?",
+        "how to decorate a small bedroom":
+          "For a small bedroom, consider using mirrors to create the illusion of space, choose light colors, use multi-functional furniture, and maximize vertical storage.",
+        "what color palette is best for a kitchen":
+          "Neutral colors like white, gray, and beige work well for kitchens. They make the space feel larger and brighter. For accents, consider blues, greens, or warm wood tones.",
+        "can you suggest furniture for a modern living room":
+          "For a modern living room, consider sleek sofas with clean lines, minimalist coffee tables (glass or metal), geometric-patterned rugs, and statement lighting fixtures.",
+        "how to choose the right lighting for a room":
+          "Choose lighting based on the room's purpose. Layer your lighting with ambient (overall), task (functional), and accent (decorative) lights. Warm lighting for cozy spaces and cool lighting for task-oriented areas.",
+        "what are the latest interior design trends":
+          "Current trends include sustainable materials, biophilic design with plenty of plants, curved furniture, bold accent walls, mixed metals, and statement lighting fixtures.",
+        "how to create a minimalist interior":
+          "Focus on clean lines, minimal decor, and a neutral color palette. Choose quality over quantity, ensure everything has a purpose, use hidden storage, and eliminate clutter.",
+        "can you help with bathroom renovation ideas":
+          "Of course! Consider updating fixtures, using marble or large-format tiles, adding a walk-in shower, incorporating plants, and installing modern lighting for a spa-like feel.",
+        "how to optimize space in a small apartment":
+          "Use multi-functional furniture (like sofa beds), vertical storage solutions, mirrors to create the illusion of space, light colors, and consider open shelving.",
+        "can you help with floor plan design":
+          "Yes, we can help you create an efficient floor plan that maximizes your space and flow. Consider room function, traffic patterns, and furniture placement.",
+        "how to arrange furniture in a large room":
+          "Create conversation areas with furniture groupings, use rugs to define different spaces, maintain clear pathways, and anchor the room with a focal point like a fireplace or large artwork.",
+        "what are some space-saving furniture ideas":
+          "Consider foldable tables, wall-mounted desks, storage beds, nesting tables, expandable dining tables, and multi-purpose ottomans with storage.",
+        "how to create a functional home office":
+          "Choose a quiet area, invest in a comfortable ergonomic chair, ensure good lighting, add storage solutions, position your desk near natural light, and personalize the space with plants or artwork.",
+        "how much does interior design cost":
+          "Costs vary based on the scope of the project. We offer custom quotes for each client based on room size, project complexity, and your budget constraints.",
+        "can you provide a budget breakdown for a project":
+          "We can provide a detailed breakdown once we discuss your project specifics. Generally, allocate about 35% for furniture, 20% for flooring, 10% for lighting, and the rest for accessories and labor.",
+        "are there any affordable interior design options":
+          "Yes, we offer budget-friendly solutions like virtual consultations, e-design packages, DIY advice, and can recommend affordable retailers and secondhand options.",
+        "how to save money on furniture and decor":
+          "Shop during sales, consider quality secondhand items, DIY projects, repurpose existing pieces, shop at budget-friendly retailers, and focus on impactful statement pieces.",
+        "i need help with nursery design":
+          "We can help you create a cozy and safe nursery. Consider a theme, invest in a quality crib and changing table, use washable paint, add blackout curtains, and include comfortable seating for late nights.",
+        "can you suggest ideas for a home gym":
+          "Consider using mirrors to make the space feel larger, install rubber flooring for safety, ensure good ventilation, include versatile equipment, and add motivational elements.",
+        "how to design a home theater":
+          "Focus on soundproofing with acoustic panels, comfortable reclining seating, optimal screen placement, proper lighting control, and quality sound system placement.",
+        "what are some ideas for a backyard patio":
+          "Add weather-resistant outdoor seating, a fire pit or outdoor heater, ambient lighting with string lights, some greenery in planters, and consider an outdoor rug to define the space.",
+        "can you help with dining room decor":
+          "We can suggest ideas for statement lighting over the table, comfortable seating, the right size table for your space, wall art or a mirror, and tabletop decor.",
+        "how to achieve a rustic interior look":
+          "Use natural materials like reclaimed wood and stone, incorporate vintage or antique decor, choose warm earth tones, add textural elements like woven baskets, and include metal accents.",
+        "can you help with modern minimalist decor":
+          "Focus on clean lines, a neutral color palette with occasional bold accents, decluttered spaces, quality statement pieces, and hidden storage solutions.",
+        "what are some bohemian interior design ideas":
+          "Incorporate colorful textiles like Moroccan rugs and tapestries, mix patterns, add plants, use natural materials, include vintage furniture, and layer different textures.",
+        "how to incorporate industrial style into my home":
+          "Use exposed brick or brick veneer, metal accents like steel or copper, reclaimed wood, factory-inspired lighting, open shelving, and concrete elements.",
+        "can you suggest coastal-inspired decor":
+          "Use light colors like blues and whites, natural textures such as jute and rattan, nautical elements like rope details, beach-inspired artwork, and driftwood or shell accents.",
+        "how long does an interior design project take":
+          "Project duration varies based on scope. Small room refreshes might take 4-8 weeks, while full renovations can take 3-6 months from concept to completion.",
+        "can you work with contractors for renovations":
+          "Yes, we coordinate with contractors to ensure a smooth renovation process, maintaining consistent communication and quality control throughout the project.",
+        "do you provide 3d design visualizations":
+          "Yes, we offer 3D visualizations to help you see your design before implementation, making it easier to understand spatial relationships and finalize material selections.",
+        "how do you handle project management":
+          "We manage projects from concept to completion, coordinating contractors, tracking timelines, handling procurement, and ensuring quality control for a stress-free experience.",
+        "can you help with purchasing furniture and materials":
+          "We can assist with sourcing and purchasing furniture and materials, often with designer discounts that we pass on to you.",
+        "i have a question about my project":
+          "Please provide more details about your specific project concerns, and we'll be happy to assist you with targeted advice.",
+        "can you provide an update on my project status":
+          "For project updates, please provide your project reference number so we can check on the current status and timeline.",
+        "how do i schedule a consultation":
+          "You can schedule a consultation by visiting our website, calling our office, or sending an email with your availability and project details.",
+        "can you help with a design emergency":
+          "Please describe your design emergency, and we'll prioritize your request and offer immediate solutions when possible.",
+        "i need to change my design plan":
+          "Let us know the specific changes you need, and we'll work with you to adjust your design plan while minimizing disruption to the timeline.",
+        "do you offer virtual consultations":
+          "Yes, we offer virtual consultations via video call, allowing us to provide design advice regardless of your location.",
+        "can you work with clients internationally":
+          "We work with international clients through virtual consultations, digital design packages, and remote project management tools.",
+        "what is your design process like":
+          "Our process involves initial consultation, concept development, design presentation, revisions, final design approval, procurement, and installation, with clear communication throughout.",
+        "can you provide references or testimonials":
+          "Yes, we can provide references and testimonials from previous clients who had similar projects to yours.",
+        "how do i get started with your services":
+          "To get started, simply complete our brief questionnaire on our website or contact us directly to schedule an initial consultation.",
+        "do you offer design consultations":
+          "Yes, we offer in-person and virtual design consultations to help you visualize and plan your interior design project.",
+        "how to choose the right interior designer":
+          "Look for designers whose portfolio matches your style, check their reviews, ensure clear communication and pricing, and confirm they have experience with projects similar to yours.",
+        "what are some popular interior design styles":
+          "Popular styles include contemporary, modern, traditional, transitional, industrial, Scandinavian, farmhouse, mid-century modern, and bohemian.",
+        "how to handle interior design projects":
+          "We handle projects from concept to completion, setting clear timelines, maintaining open communication, and ensuring budget-friendly execution.",
+        "what are the benefits of hiring an interior designer":
+          "Interior designers bring expertise, creativity, industry connections, access to trade-only resources, time and money savings, and stress reduction to your project.",
+        "can you help with color selection":
+          "Yes, we can suggest color palettes based on your style preferences, existing elements, lighting conditions, and the mood you want to create.",
+        "how to create a cohesive design scheme":
+          "Choose a unifying color palette, repeat key elements throughout the space, maintain consistent style elements, mix textures for interest, and ensure proper scale and proportion.",
+        "whats your price":
+          "Our pricing depends on project scope, room size, and service level. We offer hourly rates starting at $150/hour or flat-fee packages beginning at $500 per room.",
+        "can i get a 3d done":
+          "Yes, we offer 3D renderings of your space. Please contact us with your project details for a custom quote.",
+        "insta id":
+          "Our Instagram is @kreatika_interiors - follow us for daily inspiration and project highlights!",
+        "How to create a minimalist interior?":
+          "Focus on clean lines, minimal decor, and a neutral color palette. Choose quality over quantity, ensure everything has a purpose, use hidden storage, and eliminate clutter.",
+        "What are the latest design trends?":
+          "Current trends include sustainable materials, biophilic design with plenty of plants, curved furniture, bold accent walls, mixed metals, and statement lighting fixtures.",
+        "What are bohemian interior design ideas?":
+          "Incorporate colorful textiles like Moroccan rugs and tapestries, mix patterns, add plants, use natural materials, include vintage furniture, and layer different textures.",
+        "How to incorporate industrial style?":
+          "Use exposed brick or brick veneer, metal accents like steel or copper, reclaimed wood, factory-inspired lighting, open shelving, and concrete elements.",
+        "Can you suggest coastal-inspired decor?":
+          "Use light colors like blues and whites, natural textures such as jute and rattan, nautical elements like rope details, beach-inspired artwork, and driftwood or shell accents.",
+        "How to decorate a small bedroom?":
+          "Focus on a small space, use natural materials, keep it light and airy, and incorporate plants for a natural feel.",
+        "Can you help with bathroom renovation?":
+          "Start with a clean and simple bathroom layout, choose quality materials, and consider lighting options to create a cozy and relaxing space.",
+        "What color palette is best for a kitchen?":
+          "Choose warm tones, use natural materials, and mix textures for a cozy and inviting feel.",
+        "Help with living room design":
+          "Focus on a large space, use quality materials, and incorporate plants for a natural feel.",
+        "How much does interior design cost?":
+          "The cost of interior design can vary depending on the scope of the project, size of the space, and the level of customization.",
+        "How to save money on furniture?":
+          "Shop during sales, consider quality secondhand items, DIY projects, repurpose existing pieces, and focus on impactful statement pieces.",
+        "Do you offer virtual consultations?":
+          "Yes, we offer virtual consultations via video call, allowing us to provide design advice regardless of your location.",
+        "How long does a project take?":
+          "Project duration varies based on scope. Small room refreshes might take 4-8 weeks, while full renovations can take 3-6 months from concept to completion.",
+        "How to optimize space in a small apartment?":
+          "Focus on a small space, use natural materials, keep it light and airy, and incorporate plants for a natural feel.",
+        "What are space-saving furniture ideas?":
+          "Use multi-functional furniture (like sofa beds), vertical storage solutions, mirrors to create the illusion of space, and consider open shelving.",
+        "How to arrange furniture in a large room?":
+          "Start with a clean and simple layout, choose quality materials, and consider lighting options to create a cozy and inviting feel.",
+        "Can you help with floor plan design":
+          "We can help you create an efficient floor plan that maximizes your space and flow. Consider room function, traffic patterns, and furniture placement.",
+      };
+
+      // Suggestion categories with questions
+      const suggestionCategories = [
+        {
+          category: "Design Styles",
+          questions: [
+            "How to create a minimalist interior?",
+            "What are bohemian interior design ideas?",
+            "How to incorporate industrial style?",
+            "Can you suggest coastal-inspired decor?",
+          ],
+        },
+        {
+          category: "Room Specific",
+          questions: [
+            "How to decorate a small bedroom?",
+            "Can you help with bathroom renovation?",
+            "What color palette is best for a kitchen?",
+            "Help with living room design",
+          ],
+        },
+        {
+          category: "Budget & Planning",
+          questions: [
+            "How much does interior design cost?",
+            "How to save money on furniture?",
+            "Do you offer virtual consultations?",
+            "How long does a project take?",
+          ],
+        },
+        {
+          category: "Space Optimization",
+          questions: [
+            "How to optimize space in a small apartment?",
+            "What are space-saving furniture ideas?",
+            "How to arrange furniture in a large room?",
+            "Can you help with floor plan design?",
+          ],
+        },
+      ];
+
+      // DOM elements
+      const messageInput = document.getElementById("message-input");
+      const sendButton = document.getElementById("send-button");
+      const chatLog = document.getElementById("chat-log");
+      const suggestionChips = document.getElementById("suggestion-chips");
+      const typingIndicator = document.getElementById("typing-indicator");
+
+      // Initialize the chat
+      function initChat() {
+        // Set up event listeners
+        sendButton.addEventListener("click", handleSendMessage);
+        messageInput.addEventListener("keydown", (event) => {
+          if (event.key === "Enter") {
+            handleSendMessage();
+          }
+        });
+
+        // Initial suggestions
+        updateSuggestions();
+
+        // Set focus to the input
+        messageInput.focus();
+
+        // Add click event to suggestion chips
+        suggestionChips.addEventListener("click", (event) => {
+          if (event.target.classList.contains("suggestion-chip")) {
+            messageInput.value = event.target.textContent;
+            handleSendMessage();
+          }
+        });
+      }
+
+      // Function to show typing indicator
+      function showTypingIndicator() {
+        typingIndicator.style.display = "flex";
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      // Function to hide typing indicator
+      function hideTypingIndicator() {
+        typingIndicator.style.display = "none";
+      }
+
+      // Get current time in HH:MM format
+      function getCurrentTime() {
+        const now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        const ampm = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12;
+        hours = hours ? hours : 12; // Convert 0 to 12
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+
+        return `${hours}:${minutes} ${ampm}`;
+      }
+
+      // Display message in chat
+      function displayMessage(message, isSent) {
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+        messageElement.classList.add(isSent ? "sent" : "received");
+
+        const messageContent = document.createElement("div");
+        messageContent.classList.add("message-content");
+        messageContent.textContent = message;
+
+        const messageTime = document.createElement("div");
+        messageTime.classList.add("message-time");
+        messageTime.textContent = getCurrentTime();
+
+        messageElement.appendChild(messageContent);
+        messageElement.appendChild(messageTime);
+
+        chatLog.appendChild(messageElement);
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+
+      // Handle send message
+      // Handle send message
+      // Handle send message
+      function handleSendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+          // Display user message
+          displayMessage(message, true);
+          messageInput.value = "";
+
+          // Show typing indicator
+          showTypingIndicator();
+
+          // Get response after a delay
+          setTimeout(() => {
+            // Hide typing indicator
+            hideTypingIndicator();
+
+            // Get response from database or fallback
+            const messageLower = message.toLowerCase().replace(/[?!.]/g, "");
+
+            // Try to find a match in the responses object
+            let response = null;
+            for (const key in responses) {
+              if (messageLower.includes(key) || key.includes(messageLower)) {
+                response = responses[key];
+                break;
+              }
+            }
+
+            // Use fallback if no match found
+            if (!response) {
+              response =
+                "I'm not sure how to help with that specifically. Could you try rephrasing or ask about another interior design topic?";
+            }
+
+            // Display bot response
+            displayMessage(response, false);
+
+            // Update suggestions based on context
+            updateSuggestions(messageLower);
+
+            // Keep the input focused
+            messageInput.focus();
+          }, Math.random() * 1000 + 800); // Random delay between 800ms and 1800ms
+        } else {
+          messageInput.focus(); // Keep focus if no message is sent
+        }
+      }
+      // Update suggestion chips based on context
+      function updateSuggestions(lastMessage = null) {
+        // Clear existing suggestions
+        suggestionChips.innerHTML = "";
+
+        // Choose a category or random suggestions
+        let suggestions;
+
+        if (lastMessage) {
+          // Try to find relevant suggestions based on the message
+          if (
+            lastMessage.includes("bedroom") ||
+            lastMessage.includes("sleep")
+          ) {
+            suggestions = suggestionCategories.find(
+              (cat) => cat.category === "Room Specific"
+            ).questions;
+          } else if (
+            lastMessage.includes("budget") ||
+            lastMessage.includes("cost") ||
+            lastMessage.includes("price")
+          ) {
+            suggestions = suggestionCategories.find(
+              (cat) => cat.category === "Budget & Planning"
+            ).questions;
+          } else if (
+            lastMessage.includes("small") ||
+            lastMessage.includes("space") ||
+            lastMessage.includes("arrange")
+          ) {
+            suggestions = suggestionCategories.find(
+              (cat) => cat.category === "Space Optimization"
+            ).questions;
+          } else if (
+            lastMessage.includes("style") ||
+            lastMessage.includes("modern") ||
+            lastMessage.includes("minimal")
+          ) {
+            suggestions = suggestionCategories.find(
+              (cat) => cat.category === "Design Styles"
+            ).questions;
+          } else {
+            // If no specific match, choose random category
+            const randomCategory =
+              suggestionCategories[
+                Math.floor(Math.random() * suggestionCategories.length)
+              ];
+            suggestions = randomCategory.questions;
+          }
+        } else {
+          // First load - use mix of categories
+          suggestions = [
+            "What are the latest design trends?",
+            "How to decorate a small space?",
+            "Modern living room ideas",
+            "Help with color schemes",
+          ];
+        }
+
+        // Create and add suggestion chips
+        suggestions.forEach((suggestion, index) => {
+          setTimeout(() => {
+            const chip = document.createElement("button");
+            chip.classList.add("suggestion-chip");
+            chip.textContent = suggestion;
+            suggestionChips.appendChild(chip);
+          }, index * 100); // Staggered appearance
+        });
+      }
+
+      // Initialize the chat when DOM is loaded
+      document.addEventListener("DOMContentLoaded", initChat);
+    </script>
+  </body>
+</html>
